@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices", "Microservices\Microservices.csproj", "{F34713F5-8378-4777-A619-C9D1B1EB046E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{F34713F5-8378-4777-A619-C9D1B1EB046E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
