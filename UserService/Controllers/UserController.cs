@@ -1,4 +1,6 @@
 using Microservices.Controllers.Models;
+using Microservices.Database.Repository;
+using Microservices.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Microservices.Controllers;
@@ -6,6 +8,13 @@ namespace Microservices.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
+    private readonly IUserRepository _userRepository;
+
+    public UserController(IUserRepository userRepository)
+    {
+        _userRepository = userRepository;
+    }
+    
     [HttpGet]
     public UserModel GetUser(CancellationToken ct)
     {
@@ -18,9 +27,20 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("Register")]
-    public IActionResult Register([FromBody]CreateUserRequest request, CancellationToken ct)
+    public async Task<IActionResult> Register([FromBody]CreateUserRequest request, CancellationToken ct)
     {
-        return Ok();
+        var user = new User
+        {
+            Id = Guid.Empty,
+            Email = request.Email,
+            Name = request.Name,
+            CreatedAt = DateTime.UtcNow,
+            PasswordHash = request.Password
+        };
+
+        var id = await _userRepository.Register(user, ct);
+            
+        return Ok(id);
     }
 
     [HttpPut("Update")]
