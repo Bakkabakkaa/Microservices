@@ -16,7 +16,7 @@ public class UserDbContext : DbContext
     {
         var userBuilder = modelBuilder.Entity<User>();
         
-        userBuilder.Property(x => x.Id).IsRequired();
+        userBuilder.Property(x => x.Id).IsRequired().ValueGeneratedNever();
         userBuilder.Property(x => x.Name).IsRequired();
         userBuilder.Property(x => x.Email).IsRequired();
         userBuilder.Property(x => x.CreatedAt).IsRequired();
