@@ -7,7 +7,7 @@ namespace Microservices.Controllers;
 public class UserController : ControllerBase
 {
     [HttpGet]
-    public UserModel GetUser()
+    public UserModel GetUser(CancellationToken ct)
     {
         return new UserModel()
         {
@@ -18,13 +18,13 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("Register")]
-    public IActionResult Register([FromBody]CreateUserRequest request)
+    public IActionResult Register([FromBody]CreateUserRequest request, CancellationToken ct)
     {
         return Ok();
     }
 
     [HttpPut("Update")]
-    public ActionResult UpdateUser(int id, [FromBody] UpdateUserRequest request)
+    public ActionResult UpdateUser(int id, [FromBody] UpdateUserRequest request, CancellationToken ct)
     {
         if (!ModelState.IsValid)
         {
