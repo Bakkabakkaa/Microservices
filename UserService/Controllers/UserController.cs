@@ -43,8 +43,8 @@ public class UserController : ControllerBase
         return Ok(id);
     }
 
-    [HttpPut("Update")]
-    public ActionResult UpdateUser(int id, [FromBody] UpdateUserRequest request, CancellationToken ct)
+    [HttpPut("Update/{id}")]
+    public ActionResult UpdateUser([FromRoute]Guid id, [FromBody] UpdateUserRequest request, CancellationToken ct)
     {
         if (!ModelState.IsValid)
         {
