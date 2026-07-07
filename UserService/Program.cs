@@ -11,6 +11,8 @@ builder.Services.AddDbContext<UserDbContext>(options =>
 
 var app = builder.Build();
 
+MigrateDB(app);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -22,3 +24,13 @@ if (app.Environment.IsDevelopment())
 app.MapControllers();
 
 app.Run();
+
+void MigrateDB(WebApplication app)
+{
+    var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+
+    using var scope = scopeFactory.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<UserDbContext>();
+    
+    dbContext.Database.Migrate();
+}
