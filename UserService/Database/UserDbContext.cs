@@ -19,6 +19,8 @@ public class UserDbContext : DbContext
         userBuilder.Property(x => x.Id).IsRequired();
         userBuilder.Property(x => x.Name).IsRequired();
         userBuilder.Property(x => x.Email).IsRequired();
+        userBuilder.Property(x => x.CreatedAt).IsRequired();
+        userBuilder.Property(x => x.PasswordHash).IsRequired();
         
         userBuilder.HasKey(x => x.Id);
         
