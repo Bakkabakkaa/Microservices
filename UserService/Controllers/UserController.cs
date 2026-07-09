@@ -1,6 +1,7 @@
 using Microservices.Controllers.Models;
 using Microservices.Database.Repository;
 using Microservices.Models;
+using Microservices.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Microservices.Controllers;
@@ -9,10 +10,12 @@ namespace Microservices.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public UserController(IUserRepository userRepository)
+    public UserController(IUserRepository userRepository, IPasswordHasher passwordHasher)
     {
         _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
     }
     
     [HttpGet]
@@ -35,7 +38,7 @@ public class UserController : ControllerBase
             Email = request.Email,
             Name = request.Name,
             CreatedAt = DateTime.UtcNow,
-            PasswordHash = request.Password
+            PasswordHash = _passwordHasher.HashPassword(request.Password)
         };
 
         var id = await _userRepository.Register(user, ct);
@@ -44,12 +47,23 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("Update/{id}")]
-    public ActionResult UpdateUser([FromRoute]Guid id, [FromBody] UpdateUserRequest request, CancellationToken ct)
+    public async Task<IActionResult> UpdateUser([FromRoute]Guid id, [FromBody] UpdateUserRequest request, CancellationToken ct)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
+        
+        var newUser = new User()
+        {
+            Id = id,
+            Name = request.Name,
+            Email = request.Email,
+            PasswordHash = _passwordHasher.HashPassword(request.Password),
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _userRepository.Update(newUser, ct);
 
         return Ok(request);
     }
