@@ -1,5 +1,6 @@
 using Microservices.Database;
 using Microservices.Database.Repository;
+using Microservices.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +11,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<UserDbContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection")));
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+builder.Services.AddRepository();
+builder.Services.AddPasswordHasher();
+    
 var app = builder.Build();
 
 MigrateDB(app);
