@@ -18,15 +18,21 @@ public class UserController : ControllerBase
         _passwordHasher = passwordHasher;
     }
     
-    [HttpGet]
-    public UserModel GetUser(CancellationToken ct)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<UserModel>> GetUser(Guid id, CancellationToken ct)
     {
-        return new UserModel()
+        var user = await _userRepository.GetAsync(id, ct);
+        if (user != null)
         {
-            Id = Guid.Empty,
-            Email = "Email",
-            Name = "Artem"
-        };
+            return Ok(new UserModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name
+            });
+        }
+
+        return NotFound();
     }
 
     [HttpPost("Register")]
